@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RequiredArgsConstructor
 public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
 
@@ -26,6 +27,7 @@ public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
                 .bodyToMono(UserInfo.class)
                 .block();
 
+        System.out.println(user.toString());
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("sub", user.sub());
         attributes.put("name", user.name());
