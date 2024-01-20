@@ -1,5 +1,6 @@
 package com.codejokers.orctatu.config;
 
+import com.codejokers.orctatu.dtos.TokenInfo;
 import com.codejokers.orctatu.dtos.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
@@ -31,6 +32,18 @@ public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
         attributes.put("sub", user.sub());
         attributes.put("name", user.name());
         attributes.put("picture", user.picture());
+
+        var tokenInfo =  userInfoClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/oauth2/v3/tokeninfo")
+                        .queryParam("access_token", token)
+                        .build())
+                .retrieve()
+                .bodyToMono(TokenInfo.class)
+                .block();
+
+        attributes.put("expiration", tokenInfo.exp());
+
         return new OAuth2IntrospectionAuthenticatedPrincipal(user.name(), attributes, null);
     }
 }
