@@ -1,14 +1,18 @@
 package com.codejokers.orctatu.controllers;
 
+import com.codejokers.orctatu.config.GoogleOpaqueTokenInstrospector;
 import com.codejokers.orctatu.dtos.TokenDto;
 import com.codejokers.orctatu.dtos.UrlDto;
+import com.codejokers.orctatu.dtos.UserInfo;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +22,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 
 @RestController
+@RequiredArgsConstructor
 public class AuthController {
 
     private final String FRONTEND_URL = "http://localhost:4200";
@@ -27,6 +32,8 @@ public class AuthController {
 
     @Value("${spring.security.oauth2.resourceserver.opaque-token.clientSecret}")
     private String clientSecret;
+
+    private final OpaqueTokenIntrospector opaqueTokenIntrospector;
 
     @GetMapping("/auth/url")
     public ResponseEntity<UrlDto> auth() {
@@ -39,10 +46,14 @@ public class AuthController {
     }
 
     @GetMapping("/auth/callback")
-    public ResponseEntity<TokenDto> callback(@RequestParam("code") String code) throws URISyntaxException {
+    public ResponseEntity<UserInfo> callback(@RequestParam("code") String code) throws URISyntaxException {
 
         String token;
+        String sub ;
+        String name;
+        String image;
         try {
+            System.out.println("chamada 1");
             token = new GoogleAuthorizationCodeTokenRequest(
                     new NetHttpTransport(), new GsonFactory(),
                     clientId,
@@ -50,12 +61,17 @@ public class AuthController {
                     code,
                     "http://localhost:4200"
             ).execute().getAccessToken();
+            var opaque = opaqueTokenIntrospector.introspect(token);
+           sub = opaque.getAttribute("sub");
+           name = opaque.getAttribute("name");
+           image = opaque.getAttribute("picture");
+            System.out.println("finalizando 1");
         } catch (IOException e) {
             System.err.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        return ResponseEntity.ok(new TokenDto(token));
+        return ResponseEntity.ok(new UserInfo(sub, name, image, token));
     }
 
 
