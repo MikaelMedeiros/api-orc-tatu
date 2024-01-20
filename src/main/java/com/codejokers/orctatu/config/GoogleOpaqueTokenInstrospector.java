@@ -40,10 +40,10 @@ public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
                         .build())
                 .retrieve()
 
-                .bodyToMono(Object.class)
+                .bodyToMono(TokenInfo.class)
                 .block();
 
-        attributes.put("expiration", tokenInfo);
+        attributes.put("expiration", tokenInfo.exp());
 
         return new OAuth2IntrospectionAuthenticatedPrincipal(user.name(), attributes, null);
     }
