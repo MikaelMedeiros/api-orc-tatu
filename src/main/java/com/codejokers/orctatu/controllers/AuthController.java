@@ -52,6 +52,7 @@ public class AuthController {
         String sub ;
         String name;
         String image;
+        String exp;
         try {
             System.out.println("chamada 1");
             token = new GoogleAuthorizationCodeTokenRequest(
@@ -65,13 +66,14 @@ public class AuthController {
            sub = opaque.getAttribute("sub");
            name = opaque.getAttribute("name");
            image = opaque.getAttribute("picture");
-            System.out.println("finalizando 1");
+           exp = opaque.getAttribute("expiration");
+
         } catch (IOException e) {
             System.err.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        return ResponseEntity.ok(new UserInfo(sub, name, image, token));
+        return ResponseEntity.ok(new UserInfo(sub, name, image, token, exp));
     }
 
 

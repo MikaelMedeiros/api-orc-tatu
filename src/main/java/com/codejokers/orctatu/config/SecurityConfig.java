@@ -35,9 +35,6 @@ public class SecurityConfig {
                 coustomizerResource.opaqueToken(Customizer.withDefaults());
             });
 
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
-
         return http.build();
     }
 

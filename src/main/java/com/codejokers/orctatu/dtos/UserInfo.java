@@ -11,10 +11,11 @@ public record UserInfo(
         String email,
         boolean email_verified,
         String locale,
-        String token
+        String token,
+        String expiration
 ) {
 
-    public UserInfo(String sub, String name, String image, String token) {
-        this(sub,name,null,null,image,null,true,null,token);
+    public UserInfo(String sub, String name, String image, String token, String expiration) {
+        this(sub,name,null,null,image,null,true,null,token, expiration);
     }
 }
