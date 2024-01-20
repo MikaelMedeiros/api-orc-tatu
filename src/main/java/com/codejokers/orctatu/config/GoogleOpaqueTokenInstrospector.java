@@ -26,12 +26,11 @@ public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
                 .retrieve()
                 .bodyToMono(UserInfo.class)
                 .block();
-
         System.out.println(user.toString());
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("sub", user.sub());
         attributes.put("name", user.name());
-
+        attributes.put("picture", user.picture());
         return new OAuth2IntrospectionAuthenticatedPrincipal(user.name(), attributes, null);
     }
 }
