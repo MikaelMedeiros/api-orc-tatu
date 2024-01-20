@@ -54,7 +54,6 @@ public class AuthController {
         String image;
         String exp;
         try {
-            System.out.println("chamada 1");
             token = new GoogleAuthorizationCodeTokenRequest(
                     new NetHttpTransport(), new GsonFactory(),
                     clientId,

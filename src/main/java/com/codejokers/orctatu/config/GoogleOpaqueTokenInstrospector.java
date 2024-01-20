@@ -39,7 +39,6 @@ public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
                         .queryParam("access_token", token)
                         .build())
                 .retrieve()
-
                 .bodyToMono(TokenInfo.class)
                 .block();
 
