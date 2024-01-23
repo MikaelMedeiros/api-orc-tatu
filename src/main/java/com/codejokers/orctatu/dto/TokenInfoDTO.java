@@ -1,6 +1,6 @@
-package com.codejokers.orctatu.dtos;
+package com.codejokers.orctatu.dto;
 
-public record TokenInfo(
+public record TokenInfoDTO(
         String sub,
         String name,
         String email,

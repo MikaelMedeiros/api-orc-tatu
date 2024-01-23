@@ -1,7 +1,7 @@
 package com.codejokers.orctatu.config;
 
-import com.codejokers.orctatu.dtos.TokenInfo;
-import com.codejokers.orctatu.dtos.UserInfo;
+import com.codejokers.orctatu.dto.TokenInfoDTO;
+import com.codejokers.orctatu.dto.UserInfoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionAuthenticatedPrincipal;
@@ -19,13 +19,13 @@ public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
 
     @Override
     public OAuth2AuthenticatedPrincipal introspect(String token) {
-        UserInfo user =  userInfoClient.get()
+        UserInfoDTO user =  userInfoClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/oauth2/v3/userinfo")
                         .queryParam("access_token", token)
                         .build())
                 .retrieve()
-                .bodyToMono(UserInfo.class)
+                .bodyToMono(UserInfoDTO.class)
                 .block();
         System.out.println(user.toString());
         Map<String, Object> attributes = new HashMap<>();
@@ -39,7 +39,7 @@ public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
                         .queryParam("access_token", token)
                         .build())
                 .retrieve()
-                .bodyToMono(TokenInfo.class)
+                .bodyToMono(TokenInfoDTO.class)
                 .block();
 
         attributes.put("expiration", tokenInfo.exp());

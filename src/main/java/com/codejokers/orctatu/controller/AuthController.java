@@ -1,9 +1,7 @@
-package com.codejokers.orctatu.controllers;
+package com.codejokers.orctatu.controller;
 
-import com.codejokers.orctatu.config.GoogleOpaqueTokenInstrospector;
-import com.codejokers.orctatu.dtos.TokenDto;
-import com.codejokers.orctatu.dtos.UrlDto;
-import com.codejokers.orctatu.dtos.UserInfo;
+import com.codejokers.orctatu.dto.UrlDTO;
+import com.codejokers.orctatu.dto.UserInfoDTO;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -36,17 +34,17 @@ public class AuthController {
     private final OpaqueTokenIntrospector opaqueTokenIntrospector;
 
     @GetMapping("/auth/url")
-    public ResponseEntity<UrlDto> auth() {
+    public ResponseEntity<UrlDTO> auth() {
         var url = new GoogleAuthorizationCodeRequestUrl(
                 clientId,
                 FRONTEND_URL,
                 Arrays.asList("email", "profile", "openid")
         ).build();
-        return ResponseEntity.ok(new UrlDto(url));
+        return ResponseEntity.ok(new UrlDTO(url));
     }
 
     @GetMapping("/auth/callback")
-    public ResponseEntity<UserInfo> callback(@RequestParam("code") String code) throws URISyntaxException {
+    public ResponseEntity<UserInfoDTO> callback(@RequestParam("code") String code) throws URISyntaxException {
 
         String token;
         String sub ;
@@ -72,7 +70,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        return ResponseEntity.ok(new UserInfo(sub, name, image, token, exp));
+        return ResponseEntity.ok(new UserInfoDTO(sub, name, image, token, exp));
     }
 
 
