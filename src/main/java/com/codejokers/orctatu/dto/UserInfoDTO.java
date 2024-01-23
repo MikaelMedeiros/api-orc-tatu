@@ -1,8 +1,6 @@
-package com.codejokers.orctatu.dtos;
+package com.codejokers.orctatu.dto;
 
-import org.apache.http.annotation.Contract;
-
-public record UserInfo(
+public record UserInfoDTO(
         String sub,
         String name,
         String given_name,
@@ -15,7 +13,7 @@ public record UserInfo(
         String expiration
 ) {
 
-    public UserInfo(String sub, String name, String image, String token, String expiration) {
+    public UserInfoDTO(String sub, String name, String image, String token, String expiration) {
         this(sub,name,null,null,image,null,true,null,token, expiration);
     }
 }
