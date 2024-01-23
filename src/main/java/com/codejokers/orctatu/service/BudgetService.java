@@ -15,6 +15,6 @@ public class BudgetService {
     private final BudgetRepository budgetRepository;
 
     public Budget save(final BudgetDTO budgetDTO) {
-        return budgetRepository.save(budgetRepository.save(budgetMapper.toBudget(budgetDTO)));
+        return budgetRepository.save(budgetMapper.toBudget(budgetDTO));
     }
 }

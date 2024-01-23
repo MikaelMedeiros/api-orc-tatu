@@ -1,5 +1,8 @@
 package com.codejokers.orctatu.exception;
 
+import lombok.Getter;
+
+@Getter
 public class ApplicationException extends RuntimeException {
 
     private int status;
@@ -11,9 +14,5 @@ public class ApplicationException extends RuntimeException {
 
     private ApplicationException(final String message, final Throwable cause) {
         super(message, cause, true, false);
-    }
-
-    public Integer getStatus() {
-        return status;
     }
 }

@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 public abstract class BudgetMapper {
 
-    public abstract Budget toBudget(BudgetDTO budgetDTO);
+    public abstract Budget toBudget(final BudgetDTO budgetDTO);
 
     @AfterMapping
-    void setDefaultValue(@MappingTarget Budget budget) {
+    void setDefaultValue(@MappingTarget final Budget budget) {
         if (budget.getStatus() == null) budget.setStatus(Status.BUDGETED);
     }
 }
