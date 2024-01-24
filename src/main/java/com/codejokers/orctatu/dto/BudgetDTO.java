@@ -18,24 +18,23 @@ public record BudgetDTO(@NotBlank(message = "Preencha o nome do cliente.") Strin
                         @NotNull(message = "Preencha o tamanho em centímetros.")
                         @Min(value = 1, message = "O tamanho deve ser de pelo menos 1 centímetro.")
                         Integer centimeter,
+                        @NotNull(message = "Preencha o preço por centímetro.")
+                        @DecimalMin(value = "0.0", message = "O preço por centímetro não pode ser menor que 0.")
+                        BigDecimal pricePerCentimeter,
                         @NotEmpty(message = "Preencha o(s) local(is) do corpo.") List<BodyLocal> bodyLocals,
                         @NotEmpty(message = "Preencha o(s) estilo(s).") List<Style> styles,
                         @NotEmpty(message = "Preencha o(s) detalhe(s).") List<Detail> details,
                         @NotBlank(message = "Preencha a descrição.") String description,
-                        @NotNull(message = "Preencha a porcentagem de imposto.")
+                        @NotNull(message = "Preencha a porcentagem do estúdio.")
                         @DecimalMin(value = "0.0", message = "A porcentagem do estúdio deve estar entre 0 e 100.")
                         @DecimalMax(value = "100.0", message = "A porcentagem do estúdio deve estar entre 0 e 100.")
                         BigDecimal studioPercentage,
-                        @NotNull(message = "Preencha o preço do estacionamento.")
-                        @DecimalMin(value = "0.0", message = "O preço do estacionamento não pode ser menor que 0.")
-                        BigDecimal parkingPrice,
-                        @NotNull(message = "Preencha a porcentagem de taxa do cartão de crédito.")
-                        @DecimalMin(value = "0.0", message = "A porcentagem de taxa do cartão de crédito deve estar entre 0 e 100.")
-                        @DecimalMax(value = "100.0", message = "A porcentagem de taxa do cartão de crédito deve estar entre 0 e 100.")
-                        BigDecimal creditFee,
-                        @NotNull(message = "Preencha o preço do material.")
-                        @DecimalMin(value = "0.0", message = "O preço do material não pode ser menor que 0.")
-                        BigDecimal materialPrice,
-                        @NotNull(message = "Preencha o preço por centímetro.")
-                        @DecimalMin(value = "0.0", message = "O preço por centímetro não pode ser menor que 0.")
-                        BigDecimal pricePerCentimeter) {}
+                        @NotNull(message = "Preencha o custo do estacionamento.")
+                        @DecimalMin(value = "0.0", message = "O custo do estacionamento não pode ser menor que 0.")
+                        BigDecimal parkingCost,
+                        @NotNull(message = "Preencha o custo do material.")
+                        @DecimalMin(value = "0.0", message = "O custo do material não pode ser menor que 0.")
+                        BigDecimal materialCost,
+                        @NotNull(message = "Preencha a taxa de cartão de crédito.")
+                        @DecimalMin(value = "0.0", message = "A taxa de cartão de crédito não pode ser menor que 0.")
+                        BigDecimal creditCardFee) {}

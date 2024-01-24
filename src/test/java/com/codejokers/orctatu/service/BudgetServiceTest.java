@@ -44,18 +44,21 @@ class BudgetServiceTest {
         assertEquals(expectedBudget.getClientName(), budgetSaved.getClientName());
         assertEquals(expectedBudget.getDraw(), budgetSaved.getDraw());
         assertEquals(expectedBudget.getCentimeter(), budgetSaved.getCentimeter());
+        assertEquals(expectedBudget.getPricePerCentimeter(), budgetSaved.getPricePerCentimeter());
         assertEquals(expectedBudget.getBodyLocals().size(), budgetSaved.getBodyLocals().size());
         assertEquals(expectedBudget.getStyles().size(), budgetSaved.getStyles().size());
         assertEquals(expectedBudget.getDetails().size(), budgetSaved.getDetails().size());
         assertEquals(expectedBudget.getDescription(), budgetSaved.getDescription());
         assertEquals(expectedBudget.getStudioPercentage(), budgetSaved.getStudioPercentage());
-        assertEquals(expectedBudget.getParkingPrice(), budgetSaved.getParkingPrice());
-        assertEquals(expectedBudget.getCreditFee(), budgetSaved.getCreditFee());
-        assertEquals(expectedBudget.getMaterialPrice(), budgetSaved.getMaterialPrice());
-        assertEquals(expectedBudget.getPricePerCentimeter(), budgetSaved.getPricePerCentimeter());
-        assertEquals(expectedBudget.getTaxPercentage(), budgetSaved.getTaxPercentage());
+        assertEquals(expectedBudget.getParkingCost(), budgetSaved.getParkingCost());
+        assertEquals(expectedBudget.getMaterialCost(), budgetSaved.getMaterialCost());
+        assertEquals(expectedBudget.getCreditCardFee(), budgetSaved.getCreditCardFee());
         assertEquals(expectedBudget.getTattooValue(), budgetSaved.getTattooValue());
+        assertEquals(expectedBudget.getStudioFee(), budgetSaved.getStudioFee());
         assertEquals(expectedBudget.getNetValue(), budgetSaved.getNetValue());
+        assertEquals(expectedBudget.getGrossValue(), budgetSaved.getGrossValue());
+        assertEquals(expectedBudget.getCreditCardValue(), budgetSaved.getCreditCardValue());
         assertEquals(expectedBudget.getStatus(), budgetSaved.getStatus());
+        assertEquals(expectedBudget.getPaymentMethod(), budgetSaved.getPaymentMethod());
     }
 }

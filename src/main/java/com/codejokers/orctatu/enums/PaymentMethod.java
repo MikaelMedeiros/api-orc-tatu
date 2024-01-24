@@ -6,13 +6,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum Status {
+public enum PaymentMethod {
 
-    BUDGETED("Budgeted"),
-    SCHEDULED_WITHOUT_PAYMENT("Scheduled without payment"),
-    SCHEDULED_PAID("Scheduled paid"),
-    FORGOTTEN("Forgotten"),
-    UNKNOWN("Unknown");
+    PIX("Pix"),
+    CREDIT_CARD("Credit card"),
+    MONEY("Money");
 
     private final String name;
 }

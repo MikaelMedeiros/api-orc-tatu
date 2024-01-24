@@ -50,19 +50,22 @@ class BudgetControllerIT {
                .andExpect(jsonPath("$.clientName").value(expectedBudget.getClientName()))
                .andExpect(jsonPath("$.draw").value(expectedBudget.getDraw()))
                .andExpect(jsonPath("$.centimeter").value(expectedBudget.getCentimeter()))
+               .andExpect(jsonPath("$.pricePerCentimeter").value(expectedBudget.getPricePerCentimeter()))
                .andExpect(jsonPath("$.bodyLocals").isArray())
                .andExpect(jsonPath("$.styles[0]").value(expectedBudget.getStyles().get(0).toString()))
                .andExpect(jsonPath("$.details").isArray())
                .andExpect(jsonPath("$.description").value(expectedBudget.getDescription()))
                .andExpect(jsonPath("$.studioPercentage").value(expectedBudget.getStudioPercentage()))
-               .andExpect(jsonPath("$.parkingPrice").value(expectedBudget.getParkingPrice()))
-               .andExpect(jsonPath("$.creditFee").value(expectedBudget.getCreditFee()))
-               .andExpect(jsonPath("$.materialPrice").value(expectedBudget.getMaterialPrice()))
-               .andExpect(jsonPath("$.pricePerCentimeter").value(expectedBudget.getPricePerCentimeter()))
-               .andExpect(jsonPath("$.taxPercentage").value(expectedBudget.getTaxPercentage()))
+               .andExpect(jsonPath("$.parkingCost").value(expectedBudget.getParkingCost()))
+               .andExpect(jsonPath("$.materialCost").value(expectedBudget.getMaterialCost()))
+               .andExpect(jsonPath("$.creditCardFee").value(expectedBudget.getCreditCardFee()))
                .andExpect(jsonPath("$.tattooValue").value(expectedBudget.getTattooValue()))
+               .andExpect(jsonPath("$.studioFee").value(expectedBudget.getStudioFee()))
                .andExpect(jsonPath("$.netValue").value(expectedBudget.getNetValue()))
-               .andExpect(jsonPath("$.status").value(expectedBudget.getStatus().toString()));
+               .andExpect(jsonPath("$.grossValue").value(expectedBudget.getGrossValue()))
+               .andExpect(jsonPath("$.creditCardValue").value(expectedBudget.getCreditCardValue()))
+               .andExpect(jsonPath("$.status").value(expectedBudget.getStatus().toString()))
+               .andExpect(jsonPath("$.paymentMethod").value(expectedBudget.getPaymentMethod()));
 
         assertEquals(1, budgetRepository.count());
     }
