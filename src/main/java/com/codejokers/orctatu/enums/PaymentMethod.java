@@ -6,13 +6,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum Detail {
+public enum PaymentMethod {
 
-    SHADING("Shading"),
-    POINTILLISM("Pointillism"),
-    LINES("Lines"),
-    COLORFUL("Colorful"),
-    WHITE_INK("White Ink");
+    PIX("Pix"),
+    CREDIT_CARD("Credit card"),
+    MONEY("Money");
 
     private final String name;
 }
