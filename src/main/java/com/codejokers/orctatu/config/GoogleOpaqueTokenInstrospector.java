@@ -19,6 +19,10 @@ public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
 
     @Override
     public OAuth2AuthenticatedPrincipal introspect(String token) {
+
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("token", token);
+
         UserInfoDTO user =  userInfoClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/oauth2/v3/userinfo")
@@ -28,7 +32,7 @@ public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
                 .bodyToMono(UserInfoDTO.class)
                 .block();
         System.out.println(user.toString());
-        Map<String, Object> attributes = new HashMap<>();
+
         attributes.put("sub", user.sub());
         attributes.put("name", user.name());
         attributes.put("picture", user.picture());
@@ -43,6 +47,7 @@ public class GoogleOpaqueTokenInstrospector implements OpaqueTokenIntrospector {
                 .block();
 
         attributes.put("expiration", tokenInfo.exp());
+
 
         return new OAuth2IntrospectionAuthenticatedPrincipal(user.name(), attributes, null);
     }

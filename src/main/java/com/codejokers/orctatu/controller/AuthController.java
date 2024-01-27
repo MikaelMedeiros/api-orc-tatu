@@ -38,7 +38,7 @@ public class AuthController {
         var url = new GoogleAuthorizationCodeRequestUrl(
                 clientId,
                 FRONTEND_URL,
-                Arrays.asList("email", "profile", "openid")
+                Arrays.asList("email", "profile", "openid", "https://www.googleapis.com/auth/calendar")
         ).build();
         return ResponseEntity.ok(new UrlDTO(url));
     }
