@@ -20,6 +20,6 @@ public class CalendarConfig {
             new GsonFactory(),
                 credential
 
-        ).build();
+        ).setApplicationName("Orc Tattoo").build();
     }
 }

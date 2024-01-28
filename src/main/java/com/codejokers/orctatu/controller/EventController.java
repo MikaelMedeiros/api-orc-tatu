@@ -37,9 +37,7 @@ public class EventController {
         //Colocar o titulo, descricao e local
         Event event = new Event()
                 .setSummary(json.get("titulo"))
-                .setLocation("800 Howard St., San Francisco, CA 94103")
                 .setDescription(json.get("descricao"));
-
 
         //reservar tempo na agenda para a tatuagem
         DateTime startDateTime = new DateTime("2024-01-28T09:00:00-07:00");
@@ -54,17 +52,10 @@ public class EventController {
                 .setTimeZone("America/Los_Angeles");
         event.setEnd(end);
 
-        //adicioanr participantes
-        EventAttendee[] attendees = new EventAttendee[] {
-                new EventAttendee().setEmail("juliamellopacheco@gmail.com"),
-                new EventAttendee().setEmail("mikaeltruth@gmail.com"),
-        };
-        event.setAttendees(Arrays.asList(attendees));
-
         //Quantos minutos antes sera lembrado da tatto
         EventReminder[] reminderOverrides = new EventReminder[] {
                 new EventReminder().setMethod("email").setMinutes(24 * 60),
-                new EventReminder().setMethod("popup").setMinutes(10),
+                new EventReminder().setMethod("popup").setMinutes(45),
         };
 
         Event.Reminders reminders = new Event.Reminders()
@@ -72,14 +63,21 @@ public class EventController {
                 .setOverrides(Arrays.asList(reminderOverrides));
         event.setReminders(reminders);
 
+
+        //Cor
+        // 10 = verde - tattoo agendado
+        // 6 = Amarelo - tattoo agendado sem pix
+        event.setColorId("10");
+
         //seleciona calendario principal do tatuador
         String calendarId = "primary";
 
         //Cria conexão com a api do google calendar
         var service = calendarConfig.serviceCalendar(principal.getAttribute("token").toString());
 
+
         event = service.events().insert(calendarId, event).execute();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Tatuagem agendada!: " +  event.getHtmlLink());
+        return ResponseEntity.status(HttpStatus.CREATED).body("{ \"data\": \"Tatuagem agendada!: " +  event.getHtmlLink()+ "\"}") ;
     }
 }
