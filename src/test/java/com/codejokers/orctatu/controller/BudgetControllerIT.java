@@ -43,7 +43,7 @@ class BudgetControllerIT {
         mockMvc.perform(post("/budgets")
                .accept(MediaType.APPLICATION_JSON)
                .contentType(MediaType.APPLICATION_JSON)
-               .content(BudgetDTOFactory.BUDGETDTO_JSON))
+               .content(BudgetDTOFactory.BUDGET_DTO_JSON))
                .andExpect(status().isCreated())
                .andExpect(jsonPath("$.id").value(expectedBudget.getId()))
                .andExpect(jsonPath("$.googleId").value(expectedBudget.getGoogleId()))

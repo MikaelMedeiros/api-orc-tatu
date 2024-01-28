@@ -11,8 +11,10 @@ public enum Status {
     BUDGETED("Budgeted"),
     SCHEDULED_WITHOUT_PAYMENT("Scheduled without payment"),
     SCHEDULED_PAID("Scheduled paid"),
+    DONE("Done"),
     FORGOTTEN("Forgotten"),
-    UNKNOWN("Unknown");
+    UNKNOWN("Unknown"),
+    CANCELED("Canceled");
 
     private final String name;
 }

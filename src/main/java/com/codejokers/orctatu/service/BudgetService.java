@@ -5,6 +5,7 @@ import com.codejokers.orctatu.entity.Budget;
 import com.codejokers.orctatu.mapper.BudgetMapper;
 import com.codejokers.orctatu.repository.BudgetRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,9 +18,10 @@ public class BudgetService {
     private final BudgetMapper budgetMapper;
     private final BudgetRepository budgetRepository;
 
-    public Budget save(final BudgetDTO budgetDTO) {
+    public Budget save(final BudgetDTO budgetDTO, final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
 
         final Budget budget = budgetMapper.toBudget(budgetDTO);
+        budget.setGoogleId(oAuth2AuthenticatedPrincipal.getAttributes().get("sub").toString());
         calculate(budget);
         return budgetRepository.save(budget);
     }
