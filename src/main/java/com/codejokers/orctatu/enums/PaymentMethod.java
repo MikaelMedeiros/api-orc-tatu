@@ -9,8 +9,8 @@ import lombok.Getter;
 public enum PaymentMethod {
 
     PIX("Pix"),
-    CREDIT_CARD("Credit card"),
-    MONEY("Money");
+    MONEY("Money"),
+    CREDIT_CARD("Credit card");
 
     private final String name;
 }

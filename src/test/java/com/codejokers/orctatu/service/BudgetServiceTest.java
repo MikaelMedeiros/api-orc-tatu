@@ -4,6 +4,7 @@ import com.codejokers.orctatu.dto.BudgetDTO;
 import com.codejokers.orctatu.entity.Budget;
 import com.codejokers.orctatu.factory.BudgetDTOFactory;
 import com.codejokers.orctatu.factory.BudgetFactory;
+import com.codejokers.orctatu.factory.OAuth2AuthenticatedPrincipalImpl;
 import com.codejokers.orctatu.mapper.BudgetMapper;
 import com.codejokers.orctatu.repository.BudgetRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,6 +28,7 @@ class BudgetServiceTest {
     private BudgetMapper budgetMapper;
     @Mock
     private BudgetRepository budgetRepository;
+    private final OAuth2AuthenticatedPrincipalImpl oAuth2AuthenticatedPrincipalImpl = new OAuth2AuthenticatedPrincipalImpl();
 
     @Test
     void givenSave_whenInputDataIsCorrect_thenSaveAndReturnBudget() throws JsonProcessingException {
@@ -35,7 +37,7 @@ class BudgetServiceTest {
         final Budget expectedBudget = BudgetFactory.createBudget();
         when(budgetMapper.toBudget(any(BudgetDTO.class))).thenReturn(expectedBudget);
         when(budgetRepository.save(any(Budget.class))).thenReturn(expectedBudget);
-        final Budget budgetSaved = budgetService.save(budgetDTO);
+        final Budget budgetSaved = budgetService.save(budgetDTO, oAuth2AuthenticatedPrincipalImpl);
 
         verify(budgetMapper).toBudget(budgetDTO);
         verify(budgetRepository).save(expectedBudget);

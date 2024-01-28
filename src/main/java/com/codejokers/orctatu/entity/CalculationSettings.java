@@ -24,35 +24,14 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Budget {
+public class CalculationSettings {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @EqualsAndHashCode.Include
-    private Long id;
-    private String googleId;
-    private String clientName;
-    private String draw;
-    private Integer centimeter;
+    private String id;
     private BigDecimal pricePerCentimeter;
-    @Enumerated(EnumType.STRING)
-    private List<BodyLocal> bodyLocals;
-    @Enumerated(EnumType.STRING)
-    private List<Style> styles;
-    @Enumerated(EnumType.STRING)
-    private List<Detail> details;
-    private String description;
     private BigDecimal studioPercentage;
     private BigDecimal parkingCost;
     private BigDecimal materialCost;
     private BigDecimal creditCardFee;
-    private BigDecimal tattooValue;
-    private BigDecimal studioFee;
-    private BigDecimal netValue;
-    private BigDecimal grossValue;
-    private BigDecimal creditCardValue;
-    @Enumerated(EnumType.STRING)
-    private Status status;
-    @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
 }
