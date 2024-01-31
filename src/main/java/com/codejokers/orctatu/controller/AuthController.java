@@ -8,6 +8,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
@@ -34,7 +35,9 @@ public class AuthController {
     private final OpaqueTokenIntrospector opaqueTokenIntrospector;
 
     @GetMapping("/auth/url")
+    @Cacheable("url-autenticacao")
     public ResponseEntity<UrlDTO> auth() {
+        System.out.println("CHAMA!!");
         var url = new GoogleAuthorizationCodeRequestUrl(
                 clientId,
                 FRONTEND_URL,
@@ -44,6 +47,7 @@ public class AuthController {
     }
 
     @GetMapping("/auth/callback")
+    @Cacheable("auth-code")
     public ResponseEntity<UserInfoDTO> callback(@RequestParam("code") String code) throws URISyntaxException {
 
         String token;
