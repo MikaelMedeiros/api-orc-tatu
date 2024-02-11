@@ -14,6 +14,10 @@ spring:
     oauth2:
       resourceserver:
         opaque-token:
-          instrospect-uri: https://www.googleapis.com
+          instrospect-uri: https://www.googleapis.com/oauth2/v3
           clientId: ${CLIENT_ID}
           clientSecret: ${CLIENT_SECRET}
+front-end:
+  url: http://localhost:4200
+google:
+  authorization-code-request-url: https://accounts.google.com/o/oauth2/auth?access_type=offline
