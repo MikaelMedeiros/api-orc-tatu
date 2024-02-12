@@ -1,6 +1,7 @@
 package com.codejokers.orctatu.service;
 
 import com.codejokers.orctatu.dto.CalculationSettingsDTO;
+import com.codejokers.orctatu.dto.UserInfoDTO;
 import com.codejokers.orctatu.entity.CalculationSettings;
 import com.codejokers.orctatu.exception.ApplicationException;
 import com.codejokers.orctatu.mapper.CalculationSettingsMapper;
@@ -17,14 +18,16 @@ public class CalculationSettingsService {
     private final CalculationSettingsRepository calculationSettingsRepository;
 
     public CalculationSettings find(final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
-        return calculationSettingsRepository.findById(oAuth2AuthenticatedPrincipal.getAttributes().get("sub").toString())
+        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
+        return calculationSettingsRepository.findById(userInfoDTO.getSub())
                                             .orElseThrow(() -> new ApplicationException(404, "Não existe uma configuração de cálculos para esse usuário."));
     }
 
     public CalculationSettings save(final CalculationSettingsDTO calculationSettingsDTO, final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
 
         final CalculationSettings calculationSettings = calculationSettingsMapper.toCalculationSettings(calculationSettingsDTO);
-        calculationSettings.setId(oAuth2AuthenticatedPrincipal.getAttributes().get("sub").toString());
+        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
+        calculationSettings.setId(userInfoDTO.getSub());
         return calculationSettingsRepository.save(calculationSettings);
     }
 

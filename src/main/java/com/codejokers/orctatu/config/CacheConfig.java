@@ -10,7 +10,7 @@ import java.util.List;
 public class CacheConfig implements CacheManagerCustomizer<ConcurrentMapCacheManager> {
 
     @Override
-    public void customize(ConcurrentMapCacheManager cacheManager) {
-        cacheManager.setCacheNames(List.of("url-autenticacao", "auth-code", "user-info"));
+    public void customize(final ConcurrentMapCacheManager cacheManager) {
+        cacheManager.setCacheNames(List.of("instrospect-user-info", "authentication-url"));
     }
 }

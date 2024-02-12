@@ -1,6 +1,7 @@
 package com.codejokers.orctatu.service;
 
 import com.codejokers.orctatu.dto.CalculationSettingsDTO;
+import com.codejokers.orctatu.dto.UserInfoDTO;
 import com.codejokers.orctatu.entity.CalculationSettings;
 import com.codejokers.orctatu.exception.ApplicationException;
 import com.codejokers.orctatu.factory.CalculationSettingsDTOFactory;
@@ -41,7 +42,7 @@ class CalculationSettingsServiceTest {
         when(calculationSettingsRepository.findById(any(String.class))).thenReturn(Optional.of(expectedCalculationSettings));
         final CalculationSettings calculationSettings = calculationSettingsService.find(oAuth2AuthenticatedPrincipalImpl);
 
-        verify(calculationSettingsRepository).findById(oAuth2AuthenticatedPrincipalImpl.getAttributes().get("sub").toString());
+        verify(calculationSettingsRepository).findById(getSub());
         assertEquals(expectedCalculationSettings.getId(), calculationSettings.getId());
         assertEquals(expectedCalculationSettings.getPricePerCentimeter(), calculationSettings.getPricePerCentimeter());
         assertEquals(expectedCalculationSettings.getStudioPercentage(), calculationSettings.getStudioPercentage());
@@ -56,7 +57,7 @@ class CalculationSettingsServiceTest {
         when(calculationSettingsRepository.findById(any(String.class))).thenReturn(Optional.empty());
         final ApplicationException applicationException = assertThrowsExactly(ApplicationException.class, () -> calculationSettingsService.find(oAuth2AuthenticatedPrincipalImpl));
 
-        verify(calculationSettingsRepository).findById(oAuth2AuthenticatedPrincipalImpl.getAttributes().get("sub").toString());
+        verify(calculationSettingsRepository).findById(getSub());
         assertEquals(404, applicationException.getStatus());
         assertEquals("Não existe uma configuração de cálculos para esse usuário.", applicationException.getMessage());
     }
@@ -89,7 +90,7 @@ class CalculationSettingsServiceTest {
         when(calculationSettingsRepository.save(any(CalculationSettings.class))).thenReturn(expectedCalculationSettings);
         final CalculationSettings calculationSettingsUpdated = calculationSettingsService.update(calculationSettingsDTO, oAuth2AuthenticatedPrincipalImpl);
 
-        verify(calculationSettingsRepository).findById(oAuth2AuthenticatedPrincipalImpl.getAttributes().get("sub").toString());
+        verify(calculationSettingsRepository).findById(getSub());
         verify(calculationSettingsRepository).save(expectedCalculationSettings);
         assertEquals(expectedCalculationSettings.getId(), calculationSettingsUpdated.getId());
         assertEquals(expectedCalculationSettings.getPricePerCentimeter(), calculationSettingsUpdated.getPricePerCentimeter());
@@ -106,8 +107,13 @@ class CalculationSettingsServiceTest {
         when(calculationSettingsRepository.findById(any(String.class))).thenReturn(Optional.empty());
         final ApplicationException applicationException = assertThrowsExactly(ApplicationException.class, () -> calculationSettingsService.update(calculationSettingsDTO, oAuth2AuthenticatedPrincipalImpl));
 
-        verify(calculationSettingsRepository).findById(oAuth2AuthenticatedPrincipalImpl.getAttributes().get("sub").toString());
+        verify(calculationSettingsRepository).findById(getSub());
         assertEquals(404, applicationException.getStatus());
         assertEquals("Não existe uma configuração de cálculos para esse usuário.", applicationException.getMessage());
+    }
+
+    private String getSub() {
+        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipalImpl.getAttributes().get("userInfoDTO");
+        return userInfoDTO.getSub();
     }
 }

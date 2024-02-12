@@ -1,6 +1,7 @@
 package com.codejokers.orctatu.service;
 
 import com.codejokers.orctatu.dto.BudgetDTO;
+import com.codejokers.orctatu.dto.UserInfoDTO;
 import com.codejokers.orctatu.entity.Budget;
 import com.codejokers.orctatu.mapper.BudgetMapper;
 import com.codejokers.orctatu.repository.BudgetRepository;
@@ -21,7 +22,8 @@ public class BudgetService {
     public Budget save(final BudgetDTO budgetDTO, final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
 
         final Budget budget = budgetMapper.toBudget(budgetDTO);
-        budget.setGoogleId(oAuth2AuthenticatedPrincipal.getAttributes().get("sub").toString());
+        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
+        budget.setGoogleId(userInfoDTO.getSub());
         calculate(budget);
         return budgetRepository.save(budget);
     }
