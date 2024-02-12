@@ -21,7 +21,7 @@ public record BudgetDTO(@NotBlank(message = "Preencha o nome do cliente.") Strin
                         @NotNull(message = "Preencha o preço por centímetro.")
                         @DecimalMin(value = "0.0", message = "O preço por centímetro não pode ser menor que 0.")
                         BigDecimal pricePerCentimeter,
-                        @NotEmpty(message = "Preencha o(s) local(is) do corpo.") List<BodyLocal> bodyLocals,
+                        @NotNull(message = "Preencha o local do corpo.") BodyLocal bodyLocal,
                         @NotEmpty(message = "Preencha o(s) estilo(s).") List<Style> styles,
                         @NotEmpty(message = "Preencha o(s) detalhe(s).") List<Detail> details,
                         @NotBlank(message = "Preencha a descrição.") String description,

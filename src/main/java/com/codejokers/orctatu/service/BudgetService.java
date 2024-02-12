@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +41,10 @@ public class BudgetService {
         final BigDecimal grossValue = tattooValue.add(budget.getParkingCost()).add(budget.getMaterialCost());
         budget.setGrossValue(grossValue);
         budget.setCreditCardValue(grossValue.add(budget.getCreditCardFee()));
+    }
+
+    public List<Budget> getList(OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
+        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
+        return budgetRepository.findByGoogleId(userInfoDTO.getSub());
     }
 }

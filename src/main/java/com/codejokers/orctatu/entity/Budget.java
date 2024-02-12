@@ -36,7 +36,7 @@ public class Budget {
     private Integer centimeter;
     private BigDecimal pricePerCentimeter;
     @Enumerated(EnumType.STRING)
-    private List<BodyLocal> bodyLocals;
+    private BodyLocal bodyLocal;
     @Enumerated(EnumType.STRING)
     private List<Style> styles;
     @Enumerated(EnumType.STRING)
