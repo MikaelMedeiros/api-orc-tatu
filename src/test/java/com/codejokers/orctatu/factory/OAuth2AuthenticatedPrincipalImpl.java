@@ -1,5 +1,6 @@
 package com.codejokers.orctatu.factory;
 
+import com.codejokers.orctatu.dto.UserInfoDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 
@@ -17,8 +18,9 @@ public class OAuth2AuthenticatedPrincipalImpl implements OAuth2AuthenticatedPrin
     @Override
     public Map<String, Object> getAttributes() {
         final Map<String, Object> attributes = new HashMap<>(){};
-        final Object googleIdObject = "12345";
-        attributes.put("sub", googleIdObject);
+        final UserInfoDTO userInfoDTO = new UserInfoDTO();
+        userInfoDTO.setSub("12345");
+        attributes.put("userInfoDTO", userInfoDTO);
         return attributes;
     }
 

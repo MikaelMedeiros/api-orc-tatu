@@ -13,6 +13,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ public class AuthenticationService {
         this.googleTokenResponseMapper = googleTokenResponseMapper;
     }
 
+    @Cacheable("authentication-url")
     public UrlDTO getGoogleAuthenticationUrl() {
         final String googleAuthenticationUrl = new GoogleAuthorizationCodeRequestUrl(googleAuthorizationCodeRequestUrl, clientId, frontEndUrl, Arrays.asList("email", "profile", "openid")).build();
         return new UrlDTO(googleAuthenticationUrl);
