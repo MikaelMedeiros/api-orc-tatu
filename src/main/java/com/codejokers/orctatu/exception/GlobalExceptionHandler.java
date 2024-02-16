@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,6 +33,11 @@ class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     ResponseEntity<ApiErrorDTO> handleNoResourceFoundException() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(setApiErrorDTO(404, "Esse path não existe."));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiErrorDTO> handleAuthenticationException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(setApiErrorDTO(401, "Usuário não autenticado."));
     }
 
     @ExceptionHandler(Throwable.class)
