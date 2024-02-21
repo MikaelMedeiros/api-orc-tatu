@@ -1,10 +1,8 @@
 package com.codejokers.orctatu.dto;
 
-import com.google.api.client.util.DateTime;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter

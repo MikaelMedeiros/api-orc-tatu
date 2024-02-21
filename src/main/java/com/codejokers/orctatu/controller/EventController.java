@@ -5,7 +5,6 @@ import com.codejokers.orctatu.dto.AgendaDTO;
 import com.codejokers.orctatu.dto.UserInfoDTO;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import lombok.RequiredArgsConstructor;
