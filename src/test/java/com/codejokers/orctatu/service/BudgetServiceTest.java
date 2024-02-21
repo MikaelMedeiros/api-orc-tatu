@@ -47,7 +47,7 @@ class BudgetServiceTest {
         assertEquals(expectedBudget.getDraw(), budgetSaved.getDraw());
         assertEquals(expectedBudget.getCentimeter(), budgetSaved.getCentimeter());
         assertEquals(expectedBudget.getPricePerCentimeter(), budgetSaved.getPricePerCentimeter());
-        assertEquals(expectedBudget.getBodyLocals().size(), budgetSaved.getBodyLocals().size());
+        assertEquals(expectedBudget.getBodyLocal(), budgetSaved.getBodyLocal());
         assertEquals(expectedBudget.getStyles().size(), budgetSaved.getStyles().size());
         assertEquals(expectedBudget.getDetails().size(), budgetSaved.getDetails().size());
         assertEquals(expectedBudget.getDescription(), budgetSaved.getDescription());
