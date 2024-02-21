@@ -32,4 +32,5 @@ class BudgetController {
         final List<Budget> budgetList = budgetService.getList(oAuth2AuthenticatedPrincipal);
         return ResponseEntity.ok().body(budgetList);
     }
+    
 }
