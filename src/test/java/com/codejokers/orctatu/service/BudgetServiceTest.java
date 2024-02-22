@@ -2,9 +2,11 @@ package com.codejokers.orctatu.service;
 
 import com.codejokers.orctatu.dto.BudgetDTO;
 import com.codejokers.orctatu.entity.Budget;
+import com.codejokers.orctatu.exception.ApplicationException;
 import com.codejokers.orctatu.factory.BudgetDTOFactory;
 import com.codejokers.orctatu.factory.BudgetFactory;
 import com.codejokers.orctatu.factory.OAuth2AuthenticatedPrincipalImpl;
+import com.codejokers.orctatu.factory.UpdateBudgetDTOFactory;
 import com.codejokers.orctatu.mapper.BudgetMapper;
 import com.codejokers.orctatu.repository.BudgetRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,8 +16,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -62,5 +68,25 @@ class BudgetServiceTest {
         assertEquals(expectedBudget.getCreditCardValue(), budgetSaved.getCreditCardValue());
         assertEquals(expectedBudget.getStatus(), budgetSaved.getStatus());
         assertEquals(expectedBudget.getPaymentMethod(), budgetSaved.getPaymentMethod());
+    }
+
+    @Test
+    void givenUpdate_whenBudgetWithInformedIdNotExist_thenThrowApplicationException() {
+
+        when(budgetRepository.findById(anyLong())).thenReturn(Optional.empty());
+        final ApplicationException applicationException = assertThrowsExactly(ApplicationException.class, () -> budgetService.update(1L, UpdateBudgetDTOFactory.createUpdateBudgetDTO()));
+        verify(budgetRepository).findById(1L);
+        assertEquals(404, applicationException.getStatus());
+        assertEquals("Orçamento não encontrado.", applicationException.getMessage());
+    }
+
+    @Test
+    void givenUpdate_whenInputDataIsNotCorrect_thenThrowApplicationException() throws JsonProcessingException {
+
+        when(budgetRepository.findById(anyLong())).thenReturn(Optional.of(BudgetFactory.createBudget()));
+        final ApplicationException applicationException = assertThrowsExactly(ApplicationException.class, () -> budgetService.update(1L, UpdateBudgetDTOFactory.createUpdateBudgetDTOWithoutPaymentMethod()));
+        verify(budgetRepository).findById(1L);
+        assertEquals(400, applicationException.getStatus());
+        assertEquals("Preencha o método de pagamento.", applicationException.getMessage());
     }
 }
