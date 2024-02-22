@@ -1,9 +1,10 @@
 package com.codejokers.orctatu.controller;
 
 import com.codejokers.orctatu.config.CalendarConfig;
+import com.codejokers.orctatu.dto.AgendaDTO;
+import com.codejokers.orctatu.dto.UserInfoDTO;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -30,26 +33,28 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<String> agendarTatuagem(
-            @RequestBody Map<String, String> json,
+            @RequestBody AgendaDTO agendaDTO,
             @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal
     ) throws IOException {
 
         //Colocar o titulo, descricao e local
         Event event = new Event()
-                .setSummary(json.get("titulo"))
-                .setDescription(json.get("descricao"));
-
+                .setSummary(agendaDTO.getSummary())
+                .setDescription(agendaDTO.getDescription());
+        Date date = Date.from(agendaDTO.getStartDateTime().atZone(ZoneId.of("America/Sao_Paulo")).toInstant());
         //reservar tempo na agenda para a tatuagem
-        DateTime startDateTime = new DateTime("2024-01-28T09:00:00-07:00");
+        DateTime startDateTime = new DateTime(date);
         EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime)
                 .setTimeZone("America/Sao_Paulo");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime("2024-01-28T09:00:00-10:00");
+        var finalDate = agendaDTO.getStartDateTime().plusHours(2);
+        Date dateFinal = Date.from(finalDate.atZone(ZoneId.of("America/Sao_Paulo")).toInstant());
+        DateTime endDateTime = new DateTime(dateFinal);
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
-                .setTimeZone("America/Los_Angeles");
+                .setTimeZone("America/Sao_Paulo");
         event.setEnd(end);
 
         //Quantos minutos antes sera lembrado da tatto
@@ -73,7 +78,8 @@ public class EventController {
         String calendarId = "primary";
 
         //Cria conexão com a api do google calendar
-        var service = calendarConfig.serviceCalendar(principal.getAttribute("token").toString());
+        UserInfoDTO userInfoDTO =  principal.getAttribute("userInfoDTO");
+        var service = calendarConfig.serviceCalendar(userInfoDTO.getTokenInfoDTO().getAccessToken());
 
 
         event = service.events().insert(calendarId, event).execute();
