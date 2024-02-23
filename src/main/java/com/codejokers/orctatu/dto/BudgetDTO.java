@@ -15,7 +15,7 @@ import java.util.List;
 
 public record BudgetDTO(@NotBlank(message = "Preencha o nome do cliente.") String clientName,
                         @NotBlank(message = "Preencha o desenho.") String draw,
-                        @NotNull(message = "Preencha o tamanho em centímetros.")
+                        @NotNull(message = "Preencha o tamanho.")
                         @Min(value = 1, message = "O tamanho deve ser de pelo menos 1 centímetro.")
                         Integer centimeter,
                         @NotNull(message = "Preencha o preço por centímetro.")
@@ -25,9 +25,9 @@ public record BudgetDTO(@NotBlank(message = "Preencha o nome do cliente.") Strin
                         @NotEmpty(message = "Preencha o(s) estilo(s).") List<Style> styles,
                         @NotEmpty(message = "Preencha o(s) detalhe(s).") List<Detail> details,
                         @NotBlank(message = "Preencha a descrição.") String description,
-                        @NotNull(message = "Preencha a porcentagem do estúdio.")
-                        @DecimalMin(value = "0.0", message = "A porcentagem do estúdio deve estar entre 0 e 100.")
-                        @DecimalMax(value = "100.0", message = "A porcentagem do estúdio deve estar entre 0 e 100.")
+                        @NotNull(message = "Preencha a porcentagem do studio.")
+                        @DecimalMin(value = "0.0", message = "A porcentagem do studio deve estar entre 0 e 100.")
+                        @DecimalMax(value = "100.0", message = "A porcentagem do studio deve estar entre 0 e 100.")
                         BigDecimal studioPercentage,
                         @NotNull(message = "Preencha o custo do estacionamento.")
                         @DecimalMin(value = "0.0", message = "O custo do estacionamento não pode ser menor que 0.")
