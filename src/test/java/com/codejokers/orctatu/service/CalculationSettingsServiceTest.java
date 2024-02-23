@@ -87,6 +87,7 @@ class CalculationSettingsServiceTest {
         final CalculationSettingsDTO calculationSettingsDTO = CalculationSettingsDTOFactory.createCalculationSettingsDTO();
         final CalculationSettings expectedCalculationSettings = CalculationSettingsFactory.createCalculationSettings();
         when(calculationSettingsRepository.findById(any(String.class))).thenReturn(Optional.of(expectedCalculationSettings));
+        when(calculationSettingsMapper.toCalculationSettings(any(CalculationSettingsDTO.class))).thenReturn(expectedCalculationSettings);
         when(calculationSettingsRepository.save(any(CalculationSettings.class))).thenReturn(expectedCalculationSettings);
         final CalculationSettings calculationSettingsUpdated = calculationSettingsService.update(calculationSettingsDTO, oAuth2AuthenticatedPrincipalImpl);
 

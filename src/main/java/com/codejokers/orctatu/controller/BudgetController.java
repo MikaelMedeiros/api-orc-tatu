@@ -1,6 +1,7 @@
 package com.codejokers.orctatu.controller;
 
 import com.codejokers.orctatu.dto.BudgetDTO;
+import com.codejokers.orctatu.dto.UpdateBudgetDTO;
 import com.codejokers.orctatu.entity.Budget;
 import com.codejokers.orctatu.service.BudgetService;
 import jakarta.validation.Valid;
@@ -9,7 +10,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
@@ -28,9 +35,12 @@ class BudgetController {
     }
 
     @GetMapping
-    ResponseEntity<List<Budget>> getListBudget( @AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal){
-        final List<Budget> budgetList = budgetService.getList(oAuth2AuthenticatedPrincipal);
-        return ResponseEntity.ok().body(budgetList);
+    ResponseEntity<List<Budget>> findAll(@AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
+        return ResponseEntity.ok(budgetService.findAll(oAuth2AuthenticatedPrincipal));
     }
-    
+
+    @PutMapping("{id}")
+    ResponseEntity<Budget> update(@PathVariable final Long id, @RequestBody final UpdateBudgetDTO updateBudgetDTO) {
+        return ResponseEntity.ok(budgetService.update(id, updateBudgetDTO));
+    }
 }

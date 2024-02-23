@@ -1,8 +1,11 @@
 package com.codejokers.orctatu.service;
 
 import com.codejokers.orctatu.dto.BudgetDTO;
+import com.codejokers.orctatu.dto.UpdateBudgetDTO;
 import com.codejokers.orctatu.dto.UserInfoDTO;
 import com.codejokers.orctatu.entity.Budget;
+import com.codejokers.orctatu.enums.Status;
+import com.codejokers.orctatu.exception.ApplicationException;
 import com.codejokers.orctatu.mapper.BudgetMapper;
 import com.codejokers.orctatu.repository.BudgetRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +27,27 @@ public class BudgetService {
     public Budget save(final BudgetDTO budgetDTO, final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
 
         final Budget budget = budgetMapper.toBudget(budgetDTO);
-        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
-        budget.setGoogleId(userInfoDTO.getSub());
+        budget.setGoogleId(getSub(oAuth2AuthenticatedPrincipal));
         calculate(budget);
         return budgetRepository.save(budget);
+    }
+
+    public List<Budget> findAll(final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
+        return budgetRepository.findAllByGoogleId(getSub(oAuth2AuthenticatedPrincipal));
+    }
+
+    public Budget update(final Long id, final UpdateBudgetDTO updateBudgetDTO) {
+
+        final Optional<Budget> budget = budgetRepository.findById(id);
+        if (budget.isEmpty()) throw new ApplicationException(404, "Orçamento não encontrado.");
+        final Budget updatedBudget = budget.get();
+        setFields(updateBudgetDTO, updatedBudget);
+        return budgetRepository.save(updatedBudget);
+    }
+
+    private String getSub(final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
+        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
+        return userInfoDTO.getSub();
     }
 
     private void calculate(final Budget budget) {
@@ -43,8 +64,13 @@ public class BudgetService {
         budget.setCreditCardValue(grossValue.add(budget.getCreditCardFee()));
     }
 
-    public List<Budget> getList(OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
-        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
-        return budgetRepository.findByGoogleId(userInfoDTO.getSub());
+    private void setFields(final UpdateBudgetDTO updateBudgetDTO, final Budget updatedBudget) {
+
+        if ((updateBudgetDTO.status() == Status.SCHEDULED_PAID && updateBudgetDTO.paymentMethod() == null) ||
+            (updateBudgetDTO.status() == Status.DONE && updateBudgetDTO.paymentMethod() == null)) {
+            throw new ApplicationException(400, "Preencha o método de pagamento.");
+        }
+        updatedBudget.setStatus(updateBudgetDTO.status());
+        updatedBudget.setPaymentMethod(updateBudgetDTO.paymentMethod());
     }
 }

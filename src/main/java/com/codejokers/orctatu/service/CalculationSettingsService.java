@@ -18,31 +18,24 @@ public class CalculationSettingsService {
     private final CalculationSettingsRepository calculationSettingsRepository;
 
     public CalculationSettings find(final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
-        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
-        return calculationSettingsRepository.findById(userInfoDTO.getSub())
+        return calculationSettingsRepository.findById(getSub(oAuth2AuthenticatedPrincipal))
                                             .orElseThrow(() -> new ApplicationException(404, "Não existe uma configuração de cálculos para esse usuário."));
     }
 
     public CalculationSettings save(final CalculationSettingsDTO calculationSettingsDTO, final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
 
         final CalculationSettings calculationSettings = calculationSettingsMapper.toCalculationSettings(calculationSettingsDTO);
-        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
-        calculationSettings.setId(userInfoDTO.getSub());
+        calculationSettings.setId(getSub(oAuth2AuthenticatedPrincipal));
         return calculationSettingsRepository.save(calculationSettings);
     }
 
     public CalculationSettings update(final CalculationSettingsDTO calculationSettingsDTO, final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
-
-        final CalculationSettings calculationSettings = find(oAuth2AuthenticatedPrincipal);
-        fillInCalculationSettings(calculationSettings, calculationSettingsDTO);
-        return calculationSettingsRepository.save(calculationSettings);
+        find(oAuth2AuthenticatedPrincipal);
+        return save(calculationSettingsDTO, oAuth2AuthenticatedPrincipal);
     }
 
-    private void fillInCalculationSettings(final CalculationSettings calculationSettings, final CalculationSettingsDTO calculationSettingsDTO) {
-        calculationSettings.setPricePerCentimeter(calculationSettingsDTO.pricePerCentimeter());
-        calculationSettings.setStudioPercentage(calculationSettingsDTO.studioPercentage());
-        calculationSettings.setParkingCost(calculationSettingsDTO.parkingCost());
-        calculationSettings.setMaterialCost(calculationSettingsDTO.materialCost());
-        calculationSettings.setCreditCardFee(calculationSettingsDTO.creditCardFee());
+    private String getSub(final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
+        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
+        return userInfoDTO.getSub();
     }
 }

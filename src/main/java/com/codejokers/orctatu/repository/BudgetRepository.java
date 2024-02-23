@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface BudgetRepository extends JpaRepository<Budget, Long> {
 
-    public List<Budget> findByGoogleId(String googleId);
+    List<Budget> findAllByGoogleId(final String googleId);
 }
