@@ -10,4 +10,6 @@ import org.springframework.stereotype.Component;
 public abstract class CalculationSettingsMapper {
 
     public abstract CalculationSettings toCalculationSettings(final CalculationSettingsDTO calculationSettingsDTO);
+
+    public abstract CalculationSettingsDTO toCalculationSettingsDTO(final CalculationSettings calculationSettings);
 }
