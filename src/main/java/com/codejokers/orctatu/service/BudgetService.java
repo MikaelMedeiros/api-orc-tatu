@@ -2,7 +2,7 @@ package com.codejokers.orctatu.service;
 
 import com.codejokers.orctatu.dto.BudgetDTO;
 import com.codejokers.orctatu.dto.UpdateBudgetDTO;
-import com.codejokers.orctatu.dto.UserInfoDTO;
+import com.codejokers.orctatu.dto.UserDTO;
 import com.codejokers.orctatu.entity.Budget;
 import com.codejokers.orctatu.enums.Status;
 import com.codejokers.orctatu.exception.ApplicationException;
@@ -46,8 +46,8 @@ public class BudgetService {
     }
 
     private String getSub(final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
-        final UserInfoDTO userInfoDTO = (UserInfoDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userInfoDTO");
-        return userInfoDTO.getSub();
+        final UserDTO userDTO = (UserDTO) oAuth2AuthenticatedPrincipal.getAttributes().get("userDTO");
+        return userDTO.getSub();
     }
 
     private void calculate(final Budget budget) {

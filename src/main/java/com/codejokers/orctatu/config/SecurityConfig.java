@@ -35,7 +35,7 @@ class SecurityConfig {
                    .exceptionHandling(customExceptionHandling -> customExceptionHandling.authenticationEntryPoint(authenticationEntryPoint))
                    .sessionManagement(customizerSession -> customizerSession.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                    .authorizeHttpRequests(authorize -> {
-                       authorize.requestMatchers(HttpMethod.GET, "/authentication/**").permitAll();
+                       authorize.requestMatchers(HttpMethod.GET, "/v1/authentication/**").permitAll();
                        authorize.anyRequest().authenticated();
                    })
                    .oauth2ResourceServer(coustomizerResource -> coustomizerResource.opaqueToken(Customizer.withDefaults()))

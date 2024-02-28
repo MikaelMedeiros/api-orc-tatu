@@ -1,7 +1,6 @@
 package com.codejokers.orctatu.controller;
 
 import com.codejokers.orctatu.dto.CalculationSettingsDTO;
-import com.codejokers.orctatu.entity.CalculationSettings;
 import com.codejokers.orctatu.service.CalculationSettingsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,24 +18,23 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "calculation-settings", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "v1/calculation-settings", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 class CalculationSettingsController {
 
     private final CalculationSettingsService calculationSettingsService;
 
     @GetMapping
-    ResponseEntity<CalculationSettings> find(@AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
+    ResponseEntity<CalculationSettingsDTO> find(@AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
         return ResponseEntity.ok(calculationSettingsService.find(oAuth2AuthenticatedPrincipal));
     }
 
     @PostMapping
-    ResponseEntity<CalculationSettings> save(@RequestBody @Valid final CalculationSettingsDTO calculationSettingsDTO, @AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
-        final CalculationSettings calculationSettings = calculationSettingsService.save(calculationSettingsDTO, oAuth2AuthenticatedPrincipal);
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().build().toUri()).body(calculationSettings);
+    ResponseEntity<CalculationSettingsDTO> save(@RequestBody @Valid final CalculationSettingsDTO calculationSettingsDTO, @AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
+        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().build().toUri()).body(calculationSettingsService.save(calculationSettingsDTO, oAuth2AuthenticatedPrincipal));
     }
 
     @PutMapping
-    ResponseEntity<CalculationSettings> update(@RequestBody @Valid final CalculationSettingsDTO calculationSettingsDTO, @AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
+    ResponseEntity<CalculationSettingsDTO> update(@RequestBody @Valid final CalculationSettingsDTO calculationSettingsDTO, @AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
         return ResponseEntity.ok(calculationSettingsService.update(calculationSettingsDTO, oAuth2AuthenticatedPrincipal));
     }
 }

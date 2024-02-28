@@ -2,7 +2,7 @@ package com.codejokers.orctatu.controller;
 
 import com.codejokers.orctatu.config.CalendarConfig;
 import com.codejokers.orctatu.dto.AgendaDTO;
-import com.codejokers.orctatu.dto.UserInfoDTO;
+import com.codejokers.orctatu.dto.UserDTO;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
@@ -22,11 +22,10 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "events", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "v1/events", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class EventController {
 
     private final CalendarConfig calendarConfig;
@@ -78,8 +77,8 @@ public class EventController {
         String calendarId = "primary";
 
         //Cria conexão com a api do google calendar
-        UserInfoDTO userInfoDTO =  principal.getAttribute("userInfoDTO");
-        var service = calendarConfig.serviceCalendar(userInfoDTO.getTokenInfoDTO().getAccessToken());
+        UserDTO userDTO =  principal.getAttribute("userDTO");
+        var service = calendarConfig.serviceCalendar(userDTO.getAccessToken());
 
 
         event = service.events().insert(calendarId, event).execute();
