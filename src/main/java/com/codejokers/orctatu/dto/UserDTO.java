@@ -14,6 +14,7 @@ public class UserDTO {
     private Boolean email_verified;
     private String locale;
     private String authorities;
+    private Long expiration;
     private String accessToken;
     private String tokenType;
     private String refreshToken;

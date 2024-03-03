@@ -12,7 +12,13 @@ public enum Style {
     BOLD_LINE("Bold line"),
     REALISM("Realism"),
     OLD_SCHOOL("Old school"),
-    BLACK_WORK("Black work");
+    BLACK_WORK("Black work"),
+    MINIMALIST("Minimalist"),
+    GEEK("Geek"),
+    FREE_HAND("Free Hand"),
+    CALLIGRAPHY("Calligraphy"),
+    NEOTRADITIONAL("Neotraditional"),
+    TRIBAL("Tribal");
 
     private final String name;
 }

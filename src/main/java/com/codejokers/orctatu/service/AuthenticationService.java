@@ -26,6 +26,8 @@ import org.springframework.security.oauth2.server.resource.introspection.OpaqueT
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -136,6 +138,11 @@ public class AuthenticationService {
         userDTO.setAccessToken(googleTokenResponse.getAccessToken());
         userDTO.setTokenType(googleTokenResponse.getTokenType());
         userDTO.setRefreshToken(googleTokenResponse.getRefreshToken());
+        userDTO.setExpiration(getExpiretionInMilliSeconds(googleTokenResponse.getExpiresInSeconds()));
+    }
+    private Long getExpiretionInMilliSeconds(final long expiresInSeconds) {
+        LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expiresInSeconds);
+        return expirationDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     private void save(final UserDTO userDTO) {
