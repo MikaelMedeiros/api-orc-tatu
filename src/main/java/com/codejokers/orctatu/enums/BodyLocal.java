@@ -12,6 +12,7 @@ public enum BodyLocal {
     EAR("Ear", "Orelha"),
     NECK("Neck", "Pescoço"),
     SHOULDER("Shoulder", "Ombro"),
+    CLAVICLE("Clavicle", "Clavícula"),
     ARM("Arm", "Braço"),
     FOREARM("Forearm", "Antebraço"),
     HAND("Hand", "Mão"),
@@ -19,10 +20,13 @@ public enum BodyLocal {
     RIB("Rib", "Costela"),
     BELLY("Belly", "Barriga"),
     BACK("Back", "Costa"),
+    WAIST("Waist", "Cintura"),
+    GROIN("Groin", "Virilha"),
     ASS("Ass", "Nádega"),
     LEG("Leg", "Perna"),
     CALF("Calf", "Panturrilha"),
     CINNAMON("Cinnamon","Canela"),
+    ANKLE("Ankle", "Tornozelo"),
     FOOT("Foot", "Pé");
 
     private final String name;
