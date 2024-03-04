@@ -48,8 +48,7 @@ public class EventController {
                 .setTimeZone("America/Sao_Paulo");
         event.setStart(start);
 
-        var finalDate = agendaDTO.getStartDateTime().plusHours(2);
-        Date dateFinal = Date.from(finalDate.atZone(ZoneId.of("America/Sao_Paulo")).toInstant());
+        Date dateFinal = Date.from(agendaDTO.getEndDateTime().atZone(ZoneId.of("America/Sao_Paulo")).toInstant());
         DateTime endDateTime = new DateTime(dateFinal);
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
