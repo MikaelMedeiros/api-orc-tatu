@@ -2,6 +2,7 @@ package com.codejokers.orctatu.exception;
 
 import com.codejokers.orctatu.dto.ApiErrorDTO;
 import com.codejokers.orctatu.dto.ApiErrorListDTO;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,11 @@ class GlobalExceptionHandler {
     ResponseEntity<ApiErrorDTO> handleUnexpectedExceptions(final Throwable exception) {
         log.error("{0}", exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(setApiErrorDTO(500, "Erro na aplicação, servidor indisponível, etc."));
+    }
+
+    @ExceptionHandler(GoogleJsonResponseException.class)
+    public ResponseEntity<ApiErrorDTO> handleGoogleException(final GoogleJsonResponseException exception) {
+        return ResponseEntity.status(exception.getStatusCode()).body(setApiErrorDTO(exception.getStatusCode(), exception.getStatusMessage()));
     }
 
     private ApiErrorDTO setApiErrorDTO(final Integer status, final String error) {
