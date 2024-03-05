@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
@@ -40,7 +41,8 @@ public class EventController {
         Event event = new Event()
                 .setSummary(agendaDTO.getSummary())
                 .setDescription(agendaDTO.getDescription());
-        Date date = Date.from(agendaDTO.getStartDateTime().atZone(ZoneId.of("America/Sao_Paulo")).toInstant());
+        Instant startDate = Instant.ofEpochMilli(agendaDTO.getStartDateTime());
+        Date date = Date.from(startDate.atZone(ZoneId.of("America/Sao_Paulo")).toInstant());
         //reservar tempo na agenda para a tatuagem
         DateTime startDateTime = new DateTime(date);
         EventDateTime start = new EventDateTime()
@@ -48,8 +50,8 @@ public class EventController {
                 .setTimeZone("America/Sao_Paulo");
         event.setStart(start);
 
-        var finalDate = agendaDTO.getStartDateTime().plusHours(2);
-        Date dateFinal = Date.from(finalDate.atZone(ZoneId.of("America/Sao_Paulo")).toInstant());
+        Instant endDate = Instant.ofEpochMilli(agendaDTO.getEndDateTime());
+        Date dateFinal = Date.from(endDate.atZone(ZoneId.of("America/Sao_Paulo")).toInstant());
         DateTime endDateTime = new DateTime(dateFinal);
         EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
@@ -67,11 +69,8 @@ public class EventController {
                 .setOverrides(Arrays.asList(reminderOverrides));
         event.setReminders(reminders);
 
-
-        //Cor
-        // 10 = verde - tattoo agendado
-        // 6 = Amarelo - tattoo agendado sem pix
-        event.setColorId("10");
+        //Cor do card no Google calendar
+        setColorEvent(agendaDTO, event);
 
         //seleciona calendario principal do tatuador
         String calendarId = "primary";
@@ -84,5 +83,21 @@ public class EventController {
         event = service.events().insert(calendarId, event).execute();
 
         return ResponseEntity.status(HttpStatus.CREATED).body("{ \"data\": \"Tatuagem agendada!: " +  event.getHtmlLink()+ "\"}") ;
+    }
+
+    private void setColorEvent(AgendaDTO agendaDTO, Event event) {
+        if(agendaDTO.getTipoAgendamento().equals("tattoo")) {
+            if(agendaDTO.isPaid()) {
+                event.setColorId("10");
+            } else {
+                event.setColorId("2");
+            }
+        } else { //retoque
+            if(agendaDTO.isPaid()) {
+                event.setColorId("9");
+            } else {
+                event.setColorId("1");
+            }
+        }
     }
 }
