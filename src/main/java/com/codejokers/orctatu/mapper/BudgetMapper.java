@@ -1,6 +1,7 @@
 package com.codejokers.orctatu.mapper;
 
 import com.codejokers.orctatu.dto.BudgetDTO;
+import com.codejokers.orctatu.dto.BudgetResponseDTO;
 import com.codejokers.orctatu.entity.Budget;
 import com.codejokers.orctatu.enums.Status;
 import org.mapstruct.AfterMapping;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 public abstract class BudgetMapper {
 
     public abstract Budget toBudget(final BudgetDTO budgetDTO);
+
+    public abstract BudgetResponseDTO toBudgetResponseDTO(final Budget budget);
 
     @AfterMapping
     void setDefaultValue(@MappingTarget final Budget budget) {

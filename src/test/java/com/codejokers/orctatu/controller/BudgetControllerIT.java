@@ -46,7 +46,6 @@ class BudgetControllerIT {
                .content(BudgetDTOFactory.BUDGET_DTO_JSON))
                .andExpect(status().isCreated())
                .andExpect(jsonPath("$.id").value(expectedBudget.getId()))
-               .andExpect(jsonPath("$.googleId").value(expectedBudget.getGoogleId()))
                .andExpect(jsonPath("$.clientName").value(expectedBudget.getClientName()))
                .andExpect(jsonPath("$.draw").value(expectedBudget.getDraw()))
                .andExpect(jsonPath("$.centimeter").value(expectedBudget.getCentimeter()))

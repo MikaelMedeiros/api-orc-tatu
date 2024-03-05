@@ -1,8 +1,8 @@
 package com.codejokers.orctatu.controller;
 
 import com.codejokers.orctatu.dto.BudgetDTO;
+import com.codejokers.orctatu.dto.BudgetResponseDTO;
 import com.codejokers.orctatu.dto.UpdateBudgetDTO;
-import com.codejokers.orctatu.entity.Budget;
 import com.codejokers.orctatu.service.BudgetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,18 +29,23 @@ class BudgetController {
     private final BudgetService budgetService;
 
     @PostMapping
-    ResponseEntity<Budget> save(@RequestBody @Valid final BudgetDTO budgetDTO, @AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
-        final Budget budget = budgetService.save(budgetDTO, oAuth2AuthenticatedPrincipal);
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(budget.getId()).toUri()).body(budget);
+    ResponseEntity<BudgetResponseDTO> save(@RequestBody @Valid final BudgetDTO budgetDTO, @AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
+        final BudgetResponseDTO budgetResponseDTO = budgetService.save(budgetDTO, oAuth2AuthenticatedPrincipal);
+        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(budgetResponseDTO.id()).toUri()).body(budgetResponseDTO);
+    }
+
+    @GetMapping("{id}")
+    ResponseEntity<BudgetResponseDTO> find(@PathVariable final Long id) {
+        return ResponseEntity.ok(budgetService.find(id));
     }
 
     @GetMapping
-    ResponseEntity<List<Budget>> findAll(@AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
+    ResponseEntity<List<BudgetResponseDTO>> findAll(@AuthenticationPrincipal final OAuth2AuthenticatedPrincipal oAuth2AuthenticatedPrincipal) {
         return ResponseEntity.ok(budgetService.findAll(oAuth2AuthenticatedPrincipal));
     }
 
     @PutMapping("{id}")
-    ResponseEntity<Budget> update(@PathVariable final Long id, @RequestBody final UpdateBudgetDTO updateBudgetDTO) {
+    ResponseEntity<BudgetResponseDTO> update(@PathVariable final Long id, @RequestBody @Valid final UpdateBudgetDTO updateBudgetDTO) {
         return ResponseEntity.ok(budgetService.update(id, updateBudgetDTO));
     }
 }

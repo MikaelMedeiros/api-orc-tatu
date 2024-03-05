@@ -8,9 +8,11 @@ import com.codejokers.orctatu.enums.Style;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +32,6 @@ public class Budget {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @EqualsAndHashCode.Include
     private Long id;
-    private String googleId;
     private String clientName;
     private String draw;
     private Integer centimeter;
@@ -55,4 +56,6 @@ public class Budget {
     private Status status;
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 }
