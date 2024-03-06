@@ -102,7 +102,12 @@ public class AuthenticationService {
                                                                 refreshToken,
                                                                 clientId,
                                                                 clientSecret)
+                                    .setScopes(Arrays.asList(OidcScopes.EMAIL,
+                                            OidcScopes.OPENID,
+                                            OidcScopes.PROFILE,
+                                            CalendarScopes.CALENDAR))
                                                                 .execute();
+
         } catch (final IOException exception) {
             log.error("Erro ao tentar obter um novo token de acesso: {}", exception.getMessage());
             throw new ApplicationException(401, "Erro ao tentar obter um novo token de acesso.");
