@@ -2,21 +2,18 @@ package com.codejokers.orctatu.controller;
 
 import com.codejokers.orctatu.config.CalendarConfig;
 import com.codejokers.orctatu.dto.AgendaDTO;
-import com.codejokers.orctatu.dto.UserDTO;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -33,7 +30,8 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<String> agendarTatuagem(
-            @RequestBody AgendaDTO agendaDTO,
+            @RequestBody @Valid AgendaDTO agendaDTO,
+            @RequestHeader(value = "Authorization") String accessToken,
             @AuthenticationPrincipal OAuth2AuthenticatedPrincipal principal
     ) throws IOException {
 
@@ -76,9 +74,9 @@ public class EventController {
         String calendarId = "primary";
 
         //Cria conexão com a api do google calendar
-        UserDTO userDTO =  principal.getAttribute("userDTO");
-        var service = calendarConfig.serviceCalendar(userDTO.getAccessToken());
+        accessToken = accessToken.replace("Bearer ", "");
 
+        var service = calendarConfig.serviceCalendar(accessToken);
 
         event = service.events().insert(calendarId, event).execute();
 
