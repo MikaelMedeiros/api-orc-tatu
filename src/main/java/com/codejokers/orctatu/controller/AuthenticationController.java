@@ -25,12 +25,18 @@ class AuthenticationController {
     }
 
     @GetMapping("callback")
-    ResponseEntity<UserResponseDTO> callbackGoogle(@RequestParam("code") final String code) {
+    ResponseEntity<UserResponseDTO> callbackGoogle(@RequestParam final String code) {
         return ResponseEntity.ok(authenticationService.callbackGoogle(code));
     }
 
-    @GetMapping("refresh-token")
-    ResponseEntity<RefreshTokenDTO> getNewAccessToken(@RequestParam("refresh-token") final String refreshToken) {
-        return ResponseEntity.ok(authenticationService.getNewAccessToken(refreshToken));
+    @GetMapping("refresh")
+    ResponseEntity<RefreshTokenDTO> refresh(@RequestParam final String token) {
+        return ResponseEntity.ok(authenticationService.refresh(token));
+    }
+
+    @GetMapping("revoke")
+    ResponseEntity<Void> revoke(@RequestParam final String token) {
+        authenticationService.revoke(token);
+        return ResponseEntity.noContent().build();
     }
 }

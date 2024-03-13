@@ -48,7 +48,7 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(GoogleJsonResponseException.class)
-    public ResponseEntity<ApiErrorDTO> handleGoogleException(final GoogleJsonResponseException exception) {
+    ResponseEntity<ApiErrorDTO> handleGoogleJsonResponseException(final GoogleJsonResponseException exception) {
         return ResponseEntity.status(exception.getStatusCode()).body(setApiErrorDTO(exception.getStatusCode(), exception.getStatusMessage()));
     }
 

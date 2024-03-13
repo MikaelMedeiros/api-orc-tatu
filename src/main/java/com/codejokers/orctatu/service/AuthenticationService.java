@@ -19,15 +19,18 @@ import com.google.api.services.calendar.CalendarScopes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,15 +43,18 @@ public class AuthenticationService {
     private final String clientSecret;
     private final String frontEndUrl;
     private final String googleAuthorizationCodeRequestUrl;
+    private final String googleRevokeTokenUrl;
     private final OpaqueTokenIntrospector opaqueTokenIntrospector;
     private final GoogleTokenResponseMapper googleTokenResponseMapper;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final RestClient restClient;
 
     public AuthenticationService(@Value("${spring.security.oauth2.resourceserver.opaque-token.clientId}") final String clientId,
                                  @Value("${spring.security.oauth2.resourceserver.opaque-token.clientSecret}") final String clientSecret,
                                  @Value("${front-end.url}") final String frontEndUrl,
                                  @Value("${google.authorization-code-request-url}") final String googleAuthorizationCodeRequestUrl,
+                                 @Value("${google.revoke-token-url}") final String googleRevokeTokenUrl,
                                  final OpaqueTokenIntrospector opaqueTokenIntrospector,
                                  final GoogleTokenResponseMapper googleTokenResponseMapper,
                                  final UserRepository userRepository,
@@ -57,10 +63,12 @@ public class AuthenticationService {
         this.clientSecret = clientSecret;
         this.frontEndUrl = frontEndUrl;
         this.googleAuthorizationCodeRequestUrl = googleAuthorizationCodeRequestUrl;
+        this.googleRevokeTokenUrl = googleRevokeTokenUrl;
         this.opaqueTokenIntrospector = opaqueTokenIntrospector;
         this.googleTokenResponseMapper = googleTokenResponseMapper;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.restClient = RestClient.create();
     }
 
     @Cacheable("authentication-url")
@@ -93,26 +101,34 @@ public class AuthenticationService {
         return userMapper.toUserResponseDTO(userDTO);
     }
 
-    public RefreshTokenDTO getNewAccessToken(final String refreshToken) {
+    public RefreshTokenDTO refresh(final String token) {
 
         final GoogleTokenResponse googleTokenResponse;
         try {
             googleTokenResponse = new GoogleRefreshTokenRequest(new NetHttpTransport(),
                                                                 new GsonFactory(),
-                                                                refreshToken,
+                                                                token,
                                                                 clientId,
                                                                 clientSecret)
-                                    .setScopes(Arrays.asList(OidcScopes.EMAIL,
-                                            OidcScopes.OPENID,
-                                            OidcScopes.PROFILE,
-                                            CalendarScopes.CALENDAR))
                                                                 .execute();
 
         } catch (final IOException exception) {
             log.error("Erro ao tentar obter um novo token de acesso: {}", exception.getMessage());
             throw new ApplicationException(401, "Erro ao tentar obter um novo token de acesso.");
         }
+        googleTokenResponse.setExpiresInSeconds(getExpirationInMilliSeconds(googleTokenResponse.getExpiresInSeconds()));
         return googleTokenResponseMapper.toRefreshTokenDTO(googleTokenResponse);
+    }
+
+    public void revoke(final String token) {
+        try {
+            restClient.post()
+                      .uri("%s?token=%s".formatted(googleRevokeTokenUrl, token))
+                      .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                      .retrieve();
+        } catch (final Exception exception) {
+            throw new ApplicationException(HttpStatus.BAD_REQUEST.value(), "O token já foi revogado, está expirado ou é inválido.");
+        }
     }
 
     private GoogleTokenResponse callGoogleAuthorizationServer(final String code) throws IOException {
@@ -143,11 +159,13 @@ public class AuthenticationService {
         userDTO.setAccessToken(googleTokenResponse.getAccessToken());
         userDTO.setTokenType(googleTokenResponse.getTokenType());
         userDTO.setRefreshToken(googleTokenResponse.getRefreshToken());
-        userDTO.setExpiration(getExpiretionInMilliSeconds(googleTokenResponse.getExpiresInSeconds()));
+        userDTO.setExpiration(getExpirationInMilliSeconds(googleTokenResponse.getExpiresInSeconds()));
     }
-    private Long getExpiretionInMilliSeconds(final long expiresInSeconds) {
-        LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expiresInSeconds);
-        return expirationDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+    private Long getExpirationInMilliSeconds(final long expiresInSeconds) {
+
+        final LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expiresInSeconds);
+        return expirationDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     private void save(final UserDTO userDTO) {
