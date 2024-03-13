@@ -80,7 +80,7 @@ public class BudgetService {
 
     private void setFields(final UpdateBudgetDTO updateBudgetDTO, final Budget updatedBudget) {
 
-        if ((updateBudgetDTO.status() == Status.SCHEDULED_PAID && updateBudgetDTO.paymentMethod() == null) ||
+        if ((updateBudgetDTO.status() == Status.SCHEDULED_AND_PAID && updateBudgetDTO.paymentMethod() == null) ||
             (updateBudgetDTO.status() == Status.DONE && updateBudgetDTO.paymentMethod() == null)) {
             throw new ApplicationException(400, "Preencha o método de pagamento.");
         }
