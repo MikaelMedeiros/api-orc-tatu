@@ -31,3 +31,4 @@ front-end:
   url: ${FRONTEND_URL}
 google:
   authorization-code-request-url: https://accounts.google.com/o/oauth2/auth?access_type=offline
+  revoke-token-url: https://oauth2.googleapis.com/revoke

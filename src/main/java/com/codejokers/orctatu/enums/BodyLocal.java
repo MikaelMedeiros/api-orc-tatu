@@ -1,8 +1,12 @@
 package com.codejokers.orctatu.enums;
 
+import com.codejokers.orctatu.dto.EnumDTO;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,7 +23,7 @@ public enum BodyLocal {
     CHEST("Chest", "Peito"),
     RIB("Rib", "Costela"),
     BELLY("Belly", "Barriga"),
-    BACK("Back", "Costa"),
+    BACK("Back", "Costas"),
     WAIST("Waist", "Cintura"),
     GROIN("Groin", "Virilha"),
     ASS("Ass", "Nádega"),
@@ -30,5 +34,14 @@ public enum BodyLocal {
     FOOT("Foot", "Pé");
 
     private final String name;
-    private final String ptbr;
+    private final String namePtBr;
+
+    public static Map<String, EnumDTO> getBodyLocals() {
+
+        final Map<String, EnumDTO> bodyLocals = new HashMap<>();
+        for (final BodyLocal bodyLocal : BodyLocal.values()) {
+            bodyLocals.put(bodyLocal.name(), new EnumDTO(bodyLocal.name(), bodyLocal.name, bodyLocal.namePtBr));
+        }
+        return bodyLocals;
+    }
 }
