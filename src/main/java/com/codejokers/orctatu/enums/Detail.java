@@ -13,7 +13,7 @@ import java.util.Map;
 public enum Detail {
 
     SHADING("Shading", "Sombreamento"),
-    POINTILLISM("Pointillism", "Pointilismo"),
+    POINTILLISM("Pointillism", "Pontilhismo"),
     LINES("Lines", "Linhas"),
     COLORFUL("Colorful", "Colorido"),
     WHITE_INK("White Ink", "Tinta branca");

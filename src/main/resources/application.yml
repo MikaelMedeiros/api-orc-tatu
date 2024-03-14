@@ -28,7 +28,7 @@ management:
         include: health
 
 front-end:
-  url: http://localhost:4200
+  url: ${FRONTEND_URL}
 google:
   authorization-code-request-url: https://accounts.google.com/o/oauth2/auth?access_type=offline
   revoke-token-url: https://oauth2.googleapis.com/revoke
