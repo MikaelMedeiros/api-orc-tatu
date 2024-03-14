@@ -12,14 +12,14 @@ import java.util.Map;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum Style {
 
-    FINELINE("Fineline", "Linha fina"),
-    BOLDLINE("Boldline", "Negrito"),
+    FINELINE("Fineline", "Fineline"),
+    BOLDLINE("Boldline", "Boldline"),
     REALISM("Realism", "Realismo"),
-    OLD_SCHOOL("Old school", "Moda antiga"),
-    BLACK_WORK("Black work", "Trabalho preto"),
+    OLD_SCHOOL("Old school", "Old school"),
+    BLACK_WORK("Black work", "Black work"),
     MINIMALIST("Minimalist", "Minimalista"),
     GEEK("Geek", "Geek"),
-    FREE_HAND("Free Hand", "Mão livre"),
+    FREE_HAND("Free Hand", "Free Hand"),
     CALLIGRAPHY("Calligraphy", "Caligrafia"),
     NEO_TRADITIONAL("Neo traditional", "Neo tradicional"),
     TRIBAL("Tribal", "Tribal");

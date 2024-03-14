@@ -11,6 +11,7 @@ public class CacheConfig implements CacheManagerCustomizer<ConcurrentMapCacheMan
 
     @Override
     public void customize(final ConcurrentMapCacheManager cacheManager) {
-        cacheManager.setCacheNames(List.of("instrospect-user", "authentication-url"));
+        cacheManager.setCacheNames(List.of("instrospect-user", "authentication-url", "body-locals",
+                "details", "payment-methods", "schedule-types", "status", "styles"));
     }
 }
