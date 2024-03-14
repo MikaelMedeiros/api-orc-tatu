@@ -1,8 +1,8 @@
 package com.codejokers.orctatu.service;
 
-import com.codejokers.orctatu.dto.CalendarResponseDTO;
-import com.codejokers.orctatu.dto.ScheduleInfoDTO;
+import com.codejokers.orctatu.dto.*;
 import com.codejokers.orctatu.enums.ScheduleType;
+import com.codejokers.orctatu.enums.Status;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -12,6 +12,7 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.EventReminder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,7 +22,10 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CalendarService {
+
+    private final BudgetService budgetService;
 
     public CalendarResponseDTO schedule(final ScheduleInfoDTO scheduleInfoDTO, final String accessToken) throws IOException {
 
@@ -36,7 +40,9 @@ public class CalendarService {
         final Calendar calendar = callCalendarAPI(token);
 
         event = calendar.events().insert("primary", event).execute();
-        return new CalendarResponseDTO(event.getHtmlLink());
+
+        BudgetResponseDTO budgetResponseDTO = updateStatusBudget(scheduleInfoDTO);
+        return new CalendarResponseDTO(event.getHtmlLink(), budgetResponseDTO);
     }
 
     private EventDateTime getEventDateTime(final Long dateTimeInMilliseconds) {
@@ -68,5 +74,11 @@ public class CalendarService {
                                     new GsonFactory(),
                                     credential
         ).setApplicationName("Orc Tattoo").build();
+    }
+
+    private BudgetResponseDTO updateStatusBudget(final ScheduleInfoDTO scheduleInfoDTO) {
+        Status newStatus = scheduleInfoDTO.isPaid() ? Status.SCHEDULED_AND_PAID : Status.SCHEDULED_WITHOUT_PAYMENT;
+        Long budgetId = Long.parseLong(scheduleInfoDTO.budgetId());
+        return budgetService.update(budgetId, new UpdateBudgetDTO(newStatus, scheduleInfoDTO.paymentMethod()));
     }
 }

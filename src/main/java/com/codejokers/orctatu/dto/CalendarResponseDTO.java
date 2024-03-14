@@ -1,3 +1,3 @@
 package com.codejokers.orctatu.dto;
 
-public record CalendarResponseDTO(String eventHtmlLink) {}
+public record CalendarResponseDTO(String eventHtmlLink, BudgetResponseDTO budgetDTO) {}
